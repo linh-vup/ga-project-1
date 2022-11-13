@@ -1,5 +1,6 @@
 function init() {
   const grid = document.querySelector(".grid");
+  const livesDisplay = document.querySelector("#lives");
 
   // define game config
   const game = {
@@ -7,10 +8,13 @@ function init() {
     width: 12,
     lanes: [
       {
+        laneRow: 0,
         isSafeLane: true,
       },
       {
+        laneRow: 1,
         direction: "left",
+        obstacleIcon: "obstacle01",
         intervalSpeed: 2000,
         movesCharacter: false,
         obstacle: {
@@ -19,7 +23,9 @@ function init() {
         },
       },
       {
+        laneRow: 2,
         direction: "right",
+        obstacleIcon: "obstacle02",
         intervalSpeed: 3000,
         movesCharacter: false,
         obstacle: {
@@ -28,7 +34,9 @@ function init() {
         },
       },
       {
+        laneRow: 3,
         direction: "left",
+        obstacleIcon: "obstacle03",
         intervalSpeed: 4000,
         movesCharacter: false,
         obstacle: {
@@ -37,24 +45,90 @@ function init() {
         },
       },
       {
+        laneRow: 4,
+        direction: "left",
+        obstacleIcon: "obstacle04",
+        intervalSpeed: 3500,
+        movesCharacter: false,
+        obstacle: {
+          length: 1,
+          gapLength: 3,
+        },
+      },
+      {
+        laneRow: 5,
+        isSafeLane: true,
+      },
+      {
+        laneRow: 6,
+        isSafeLane: true,
+      },
+      {
+        laneRow: 7,
+        direction: "left",
+        obstacleIcon: "obstacle07",
+        intervalSpeed: 2000,
+        movesCharacter: false,
+        obstacle: {
+          length: 2,
+          gapLength: 5,
+        },
+      },
+      {
+        laneRow: 8,
+        direction: "right",
+        obstacleIcon: "obstacle08",
+        intervalSpeed: 2500,
+        movesCharacter: false,
+        obstacle: {
+          length: 1,
+          gapLength: 4,
+        },
+      },
+      {
+        laneRow: 9,
+        direction: "left",
+        obstacleIcon: "obstacle09",
+        intervalSpeed: 3000,
+        movesCharacter: false,
+        obstacle: {
+          length: 1,
+          gapLength: 3,
+        },
+      },
+      {
+        laneRow: 10,
+        direction: "left",
+        obstacleIcon: "obstacle10",
+        intervalSpeed: 3500,
+        movesCharacter: false,
+        obstacle: {
+          length: 1,
+          gapLength: 4,
+        },
+      },
+      {
+        laneRow: 11,
         isSafeLane: true,
       },
     ],
   };
 
+  // keeps track of player's coordinates
+  const playerPosition = {
+    x: 0,
+    y: 0,
+  };
+
   // class name that will be used to identify obstacles
   const obstacleClass = "obstacle";
-
-  // set player's start coordinates based on game config
-  const playerPosition = {
-    x: Math.floor(game.width / 2),
-    y: game.lanes.length - 1,
-  };
 
   // array to hold one array per lane, containing all divs for respective lanes
   const cells = [];
 
   const timers = [];
+  let playerLives = 5;
+  let isGamePaused = false;
 
   // populate cells array and add divs to document
   function setupGrid() {
@@ -64,6 +138,7 @@ function init() {
       const laneCells = [];
       const laneDiv = document.createElement("div");
       laneDiv.classList.add("lane");
+      laneDiv.setAttribute("id", `lane-${y}`);
 
       // add cells to each row
       for (let x = 0; x < game.width; x++) {
@@ -91,8 +166,9 @@ function init() {
 
     let remainingObstacleCells = obstacleLength;
     let remainingGapCells = 0;
-    for (let i = 0; i < laneCells.length; i++) {
-      const cell = laneCells[i];
+    laneCells.forEach((cell) => {
+      // for (let i = 0; i < laneCells.length; i++) {
+      //   const cell = laneCells[i];
       if (remainingObstacleCells > 0) {
         cell.classList.add(obstacleClass);
         remainingObstacleCells--;
@@ -105,7 +181,7 @@ function init() {
           remainingObstacleCells = obstacleLength;
         }
       }
-    }
+    });
   }
 
   // set timer to move obstacles in lane
@@ -115,42 +191,46 @@ function init() {
     }
 
     const timer = setInterval(() => {
-      const previousObstacles = laneCells.map((cell) =>
-        cell.classList.contains(obstacleClass)
-      );
-
-      for (let i = 0; i < laneCells.length; i++) {
-        const cell = laneCells[i];
-        switch (gameLane.direction) {
-          case "left":
-            if (previousObstacles[(i + 1) % laneCells.length]) {
-              cell.classList.add(obstacleClass);
-            } else {
-              cell.classList.remove(obstacleClass);
+      if (!isGamePaused) {
+        const previousObstacles = laneCells.map((cell) =>
+          cell.classList.contains(obstacleClass)
+        );
+        // to do: use a forEach, but mind cell and i
+        for (let i = 0; i < laneCells.length; i++) {
+          const cell = laneCells[i];
+          switch (gameLane.direction) {
+            case "left":
+              if (previousObstacles[(i + 1) % laneCells.length]) {
+                cell.classList.add(obstacleClass);
+              } else {
+                cell.classList.remove(obstacleClass);
+              }
+              break;
+            case "right": {
+              if (
+                previousObstacles[(i - 1 + laneCells.length) % laneCells.length]
+              ) {
+                cell.classList.add(obstacleClass);
+              } else {
+                cell.classList.remove(obstacleClass);
+              }
+              break;
             }
-            break;
-          case "right": {
-            if (
-              previousObstacles[(i - 1 + laneCells.length) % laneCells.length]
-            ) {
-              cell.classList.add(obstacleClass);
-            } else {
-              cell.classList.remove(obstacleClass);
-            }
-            break;
           }
         }
+
+        evaluatePlayerPosition();
       }
-
-      evaluatePlayerPosition();
     }, gameLane.intervalSpeed);
-
     timers.push(timer);
     console.log(timers);
   }
 
   // check keystroke and move player accordingly
   function handleKeyUp(event) {
+    if (isGamePaused) {
+      return;
+    }
     switch (
       event.key // * calculate the next position and update it
     ) {
@@ -193,20 +273,33 @@ function init() {
     evaluatePlayerPosition();
   }
 
+  function resetPlayerPosition() {
+    movePlayer(Math.floor(game.width / 2), game.lanes.length - 1);
+  }
+  // function to reset playerposition to original and obstacles to move again
+  function anotherTurn() {
+    getPlayerPositionCell().removeAttribute("id");
+    resetPlayerPosition();
+    isGamePaused = false;
+  }
   // checks if player landed on obstacles or reached last lane. if so, end game.
   function evaluatePlayerPosition() {
     if (getPlayerPositionCell().classList.contains(obstacleClass)) {
       console.log("Du loser");
-      clearTimers();
+      playerLives--;
+      livesDisplay.innerHTML = playerLives;
+      isGamePaused = true;
+      getPlayerPositionCell().setAttribute("id", "clash");
+      setTimeout(anotherTurn, 1500);
     } else if (playerPosition.y === 0) {
       console.log("You won!");
-      clearTimers();
+      isGamePaused = true;
     }
   }
 
-  function clearTimers() {
-    timers.forEach((timer) => clearInterval(timer));
-  }
+  // function clearTimers() {
+  //   timers.forEach((timer) => clearInterval(timer));
+  // }
 
   // returns div of current player position
   function getPlayerPositionCell() {
@@ -218,7 +311,7 @@ function init() {
   // start listening to key events
   document.addEventListener("keyup", handleKeyUp);
 
+  resetPlayerPosition();
   // move player to initial position
-  movePlayer(playerPosition.x, playerPosition.y);
 }
 document.addEventListener("DOMContentLoaded", init);
