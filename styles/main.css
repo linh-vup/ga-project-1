@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+}
+
+.grid-wrapper {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid {
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.grid .lane {
+  display: flex;
+  justify-content: center;
+}
+
+.grid .cell {
+  border: 1px solid lightgrey;
+  width: 60px;
+  height: 60px;
+}
+
+.grid .cell.foxy {
+  background-image: url(/Images/fox.gif);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.grid .cell.obstacle {
+  background-image: url(/Images/bicycle.gif);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.grid .cell.foxy.obstacle {
+  background-image: url(/Images/meow_dead.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
