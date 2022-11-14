@@ -1,20 +1,21 @@
 function init() {
   const grid = document.querySelector(".grid");
   const livesDisplay = document.querySelector("#lives");
+  const goalDisplay = document.querySelector("#in-goal");
 
   // define game config
   const game = {
     difficulty: 1,
-    width: 12,
+    width: 13,
     lanes: [
       {
         laneRow: 0,
-        isSafeLane: true,
+        type: "safezone",
       },
       {
         laneRow: 1,
+        type: "obstacle",
         direction: "left",
-        obstacleIcon: "obstacle01",
         intervalSpeed: 2000,
         movesCharacter: false,
         obstacle: {
@@ -24,8 +25,8 @@ function init() {
       },
       {
         laneRow: 2,
+        type: "obstacle",
         direction: "right",
-        obstacleIcon: "obstacle02",
         intervalSpeed: 3000,
         movesCharacter: false,
         obstacle: {
@@ -35,8 +36,8 @@ function init() {
       },
       {
         laneRow: 3,
+        type: "obstacle",
         direction: "left",
-        obstacleIcon: "obstacle03",
         intervalSpeed: 4000,
         movesCharacter: false,
         obstacle: {
@@ -46,8 +47,8 @@ function init() {
       },
       {
         laneRow: 4,
+        type: "obstacle",
         direction: "left",
-        obstacleIcon: "obstacle04",
         intervalSpeed: 3500,
         movesCharacter: false,
         obstacle: {
@@ -57,16 +58,16 @@ function init() {
       },
       {
         laneRow: 5,
-        isSafeLane: true,
+        type: "safezone",
       },
       {
         laneRow: 6,
-        isSafeLane: true,
+        type: "safezone",
       },
       {
         laneRow: 7,
+        type: "obstacle",
         direction: "left",
-        obstacleIcon: "obstacle07",
         intervalSpeed: 2000,
         movesCharacter: false,
         obstacle: {
@@ -76,8 +77,8 @@ function init() {
       },
       {
         laneRow: 8,
+        type: "obstacle",
         direction: "right",
-        obstacleIcon: "obstacle08",
         intervalSpeed: 2500,
         movesCharacter: false,
         obstacle: {
@@ -87,8 +88,8 @@ function init() {
       },
       {
         laneRow: 9,
+        type: "obstacle",
         direction: "left",
-        obstacleIcon: "obstacle09",
         intervalSpeed: 3000,
         movesCharacter: false,
         obstacle: {
@@ -98,8 +99,8 @@ function init() {
       },
       {
         laneRow: 10,
+        type: "obstacle",
         direction: "left",
-        obstacleIcon: "obstacle10",
         intervalSpeed: 3500,
         movesCharacter: false,
         obstacle: {
@@ -109,7 +110,7 @@ function init() {
       },
       {
         laneRow: 11,
-        isSafeLane: true,
+        type: "safezone",
       },
     ],
   };
@@ -129,6 +130,7 @@ function init() {
   const timers = [];
   let playerLives = 5;
   let isGamePaused = false;
+  let playersInGoal = 0;
 
   // populate cells array and add divs to document
   function setupGrid() {
@@ -148,17 +150,19 @@ function init() {
         laneCells.push(cell);
       }
 
+      // console.log(laneCells);
       cells.push(laneCells);
       grid.appendChild(laneDiv);
 
       setupObstacles(laneCells, gameLane);
       moveObstacles(laneCells, gameLane);
+      goalLane();
     }
   }
 
   // add obstacle to lane
   function setupObstacles(laneCells, gameLane) {
-    if (gameLane.isSafeLane) {
+    if (gameLane.type === "safezone") {
       return;
     }
     const obstacleLength = gameLane.obstacle.length;
@@ -186,7 +190,7 @@ function init() {
 
   // set timer to move obstacles in lane
   function moveObstacles(laneCells, gameLane) {
-    if (gameLane.isSafeLane) {
+    if (gameLane.type === "safezone") {
       return;
     }
 
@@ -223,7 +227,6 @@ function init() {
       }
     }, gameLane.intervalSpeed);
     timers.push(timer);
-    console.log(timers);
   }
 
   // check keystroke and move player accordingly
@@ -245,7 +248,12 @@ function init() {
         }
         break;
       case "ArrowUp":
-        if (playerPosition.y > 0) {
+        if (
+          playerPosition.y > 0 &&
+          !cells[playerPosition.y - 1][playerPosition.x].classList.contains(
+            "blocked-cells"
+          )
+        ) {
           movePlayer(playerPosition.x, playerPosition.y - 1);
         }
         break;
@@ -257,6 +265,11 @@ function init() {
       default:
         console.log("invalid key do nothing");
     }
+  }
+
+  // returns div of current player position
+  function getPlayerPositionCell() {
+    return cells[playerPosition.y][playerPosition.x];
   }
 
   // move player to position x, y
@@ -276,35 +289,69 @@ function init() {
   function resetPlayerPosition() {
     movePlayer(Math.floor(game.width / 2), game.lanes.length - 1);
   }
+  // checks if player landed on obstacles or reached last lane. if so, end game.
+  function evaluatePlayerPosition() {
+    if (getPlayerPositionCell().classList.contains(obstacleClass)) {
+      if (playerLives > 0) {
+        removePlayerLives();
+        getPlayerPositionCell().setAttribute("id", "clash");
+        setTimeout(anotherTurn, 1500);
+      } else {
+        gameOver();
+      }
+    } else if (
+      getPlayerPositionCell().classList.contains("goal") &&
+      !getPlayerPositionCell().classList.contains("foxyWinner")
+    ) {
+      if (playersInGoal < 3) {
+        addPlayerToGoal();
+        console.log(playersInGoal);
+        setTimeout(anotherTurn, 1500);
+      }
+      if (playersInGoal === 3) {
+        setTimeout(gameWon, 500);
+      }
+    }
+  }
+
   // function to reset playerposition to original and obstacles to move again
   function anotherTurn() {
     getPlayerPositionCell().removeAttribute("id");
     resetPlayerPosition();
     isGamePaused = false;
   }
-  // checks if player landed on obstacles or reached last lane. if so, end game.
-  function evaluatePlayerPosition() {
-    if (getPlayerPositionCell().classList.contains(obstacleClass)) {
-      console.log("Du loser");
-      playerLives--;
-      livesDisplay.innerHTML = playerLives;
-      isGamePaused = true;
-      getPlayerPositionCell().setAttribute("id", "clash");
-      setTimeout(anotherTurn, 1500);
-    } else if (playerPosition.y === 0) {
-      console.log("You won!");
-      isGamePaused = true;
-    }
+  function removePlayerLives() {
+    playerLives--;
+    livesDisplay.innerHTML = playerLives;
+    isGamePaused = true;
+  }
+  function addPlayerToGoal() {
+    getPlayerPositionCell().classList.add("foxyWinner");
+    playersInGoal++;
+    goalDisplay.innerHTML = playersInGoal;
+    isGamePaused = true;
+  }
+  function gameOver() {
+    alert("Game Over!");
+  }
+  function gameWon() {
+    isGamePaused = true;
+    alert("You won! All foxes are home safely!");
   }
 
+  function goalLane() {
+    cells[0].at(3).classList.add("goal");
+    cells[0].at(6).classList.add("goal");
+    cells[0].at(9).classList.add("goal");
+    cells[0].filter((cell) => {
+      if (!cell.classList.contains("goal")) {
+        cell.classList.add("blocked-cells");
+      }
+    });
+  }
   // function clearTimers() {
   //   timers.forEach((timer) => clearInterval(timer));
   // }
-
-  // returns div of current player position
-  function getPlayerPositionCell() {
-    return cells[playerPosition.y][playerPosition.x];
-  }
 
   setupGrid();
 
