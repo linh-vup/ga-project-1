@@ -30,66 +30,66 @@ body {
 }
 
 .grid .cell.foxy {
-  background-image: url(../Images/fox.gif);
+  background-image: url(../images/fox.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .grid .cell.foxyWinner {
-  background-image: url(../Images/fox.gif);
+  background-image: url(../images/fox.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .grid #lane-1 .obstacle {
-  background-image: url(../Images/bluewave2.gif);
+  background-image: url(../images/bluewave2.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-2 .obstacle {
-  background-image: url(../Images/arrow-right.gif);
+  background-image: url(../images/arrow-right.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-3 .obstacle {
-  background-image: url(../Images/bicycle.gif);
+  background-image: url(../images/bicycle.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-4 .obstacle {
-  background-image: url(../Images/bicycle.gif);
+  background-image: url(../images/bicycle.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-7 .obstacle {
-  background-image: url(../Images/bicycle.gif);
+  background-image: url(../images/bicycle.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-8 .obstacle {
-  background-image: url(../Images/arrow-right.gif);
+  background-image: url(../images/arrow-right.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .grid #lane-9 .obstacle {
-  background-image: url(../Images/bicycle.gif);
+  background-image: url(../images/bicycle.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-10 .obstacle {
-  background-image: url(../Images/bicycle.gif);
+  background-image: url(../images/bicycle.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-11 .obstacle {
-  background-image: url(../Images/bicycle.gif);
+  background-image: url(../images/bicycle.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .grid #clash {
-  background-image: url(../Images/meow_dead.png) !important;
+  background-image: url(../images/meow_dead.png) !important;
   background-repeat: no-repeat;
   background-size: contain;
 }
