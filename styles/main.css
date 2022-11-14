@@ -29,69 +29,61 @@ body {
   height: 60px;
 }
 
+.grid .obstacle {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
 .grid .cell.foxy {
-  background-image: url(../images/fox.gif);
+  background-image: url(../images/lil_fox.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .grid .cell.foxyWinner {
-  background-image: url(../images/fox.gif);
+  background-image: url(../images/foxdance.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .grid #lane-1 .obstacle {
   background-image: url(../images/bluewave2.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 .grid #lane-2 .obstacle {
   background-image: url(../images/arrow-right.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 .grid #lane-3 .obstacle {
   background-image: url(../images/bicycle.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 .grid #lane-4 .obstacle {
   background-image: url(../images/bicycle.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-.grid #lane-7 .obstacle {
-  background-image: url(../images/bicycle.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-.grid #lane-8 .obstacle {
-  background-image: url(../images/arrow-right.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
-.grid #lane-9 .obstacle {
+.grid #lane-7 .obstacle {
   background-image: url(../images/bicycle.gif);
-  background-repeat: no-repeat;
+}
+
+.grid #lane-8 .obstacle {
+  background-image: url(../images/cartoright.gif);
+}
+
+.grid #lane-9 {
+  background-image: url(../images/street.png);
   background-size: contain;
 }
+.grid #lane-9 .obstacle {
+  background-image: url(../images/biketoleft.gif);
+}
 .grid #lane-10 .obstacle {
-  background-image: url(../images/bicycle.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
+  background-image: url(../images/scootertoleft.gif);
 }
 .grid #lane-11 .obstacle {
   background-image: url(../images/bicycle.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .grid #clash {
-  background-image: url(../images/meow_dead.png) !important;
-  background-repeat: no-repeat;
-  background-size: contain;
+  background-image: url(../images/blobfox_angrylaugh.png) !important;
 }
 
 .grid .cell.goal {
@@ -104,11 +96,11 @@ body {
   display: none; /* Hidden by default */
   width: 50%; /* Full width (cover the whole page) */
   height: 50%; /* Full height (cover the whole page) */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  top: 250px;
+  left: 200px;
+  right: 50px;
+  bottom: 50px;
+  background-color: rgba(27, 53, 32, 0.8); /* Black background with opacity */
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }

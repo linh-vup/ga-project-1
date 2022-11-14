@@ -2,10 +2,11 @@ function init() {
   const grid = document.querySelector(".grid");
   const livesDisplay = document.querySelector("#lives");
   const goalDisplay = document.querySelector("#in-goal");
+  const startButton = document.querySelector("#start");
+  const mediumDifficultyButton = document.querySelector("#medium-game");
 
   // define game config
   const game = {
-    difficulty: 1,
     width: 13,
     lanes: [
       {
@@ -132,15 +133,20 @@ function init() {
   let isGamePaused = false;
   let playersInGoal = 0;
 
+  function loadGame() {
+    setupGrid();
+    setupObstacles();
+    moveObstacles(1);
+  }
+
   // populate cells array and add divs to document
   function setupGrid() {
-    // add rows (lanes)
-    for (let y = 0; y < game.lanes.length; y++) {
-      const gameLane = game.lanes[y];
+    for (let i = 0; i < game.lanes.length; i++) {
+      // add rows (lanes)
       const laneCells = [];
       const laneDiv = document.createElement("div");
       laneDiv.classList.add("lane");
-      laneDiv.setAttribute("id", `lane-${y}`);
+      laneDiv.setAttribute("id", `lane-${i}`);
 
       // add cells to each row
       for (let x = 0; x < game.width; x++) {
@@ -153,80 +159,89 @@ function init() {
       // console.log(laneCells);
       cells.push(laneCells);
       grid.appendChild(laneDiv);
-
-      setupObstacles(laneCells, gameLane);
-      moveObstacles(laneCells, gameLane);
-      goalLane();
     }
+    goalLane();
   }
 
   // add obstacle to lane
-  function setupObstacles(laneCells, gameLane) {
-    if (gameLane.type === "safezone") {
-      return;
-    }
-    const obstacleLength = gameLane.obstacle.length;
-    const gapLength = gameLane.obstacle.gapLength;
-
-    let remainingObstacleCells = obstacleLength;
-    let remainingGapCells = 0;
-    laneCells.forEach((cell) => {
-      // for (let i = 0; i < laneCells.length; i++) {
-      //   const cell = laneCells[i];
-      if (remainingObstacleCells > 0) {
-        cell.classList.add(obstacleClass);
-        remainingObstacleCells--;
-        if (remainingObstacleCells === 0) {
-          remainingGapCells = gapLength;
-        }
-      } else if (remainingGapCells > 0) {
-        remainingGapCells--;
-        if (remainingGapCells === 0) {
-          remainingObstacleCells = obstacleLength;
-        }
+  function setupObstacles() {
+    for (let i = 0; i < game.lanes.length; i++) {
+      console.log("test");
+      const gameLane = game.lanes[i];
+      const laneCells = cells[i];
+      if (gameLane.type === "safezone") {
+        continue;
       }
-    });
+      const obstacleLength = gameLane.obstacle.length;
+      const gapLength = gameLane.obstacle.gapLength;
+
+      let remainingObstacleCells = obstacleLength;
+      let remainingGapCells = 0;
+      laneCells.forEach((cell) => {
+        // for (let i = 0; i < laneCells.length; i++) {
+        //   const cell = laneCells[i];
+        if (remainingObstacleCells > 0) {
+          cell.classList.add(obstacleClass);
+          remainingObstacleCells--;
+          if (remainingObstacleCells === 0) {
+            remainingGapCells = gapLength;
+          }
+        } else if (remainingGapCells > 0) {
+          remainingGapCells--;
+          if (remainingGapCells === 0) {
+            remainingObstacleCells = obstacleLength;
+          }
+        }
+      });
+    }
   }
 
   // set timer to move obstacles in lane
-  function moveObstacles(laneCells, gameLane) {
-    if (gameLane.type === "safezone") {
-      return;
-    }
+  function moveObstacles(multiplier) {
+    for (let i = 0; i < game.lanes.length; i++) {
+      const gameLane = game.lanes[i];
+      const laneCells = cells[i];
 
-    const timer = setInterval(() => {
-      if (!isGamePaused) {
-        const previousObstacles = laneCells.map((cell) =>
-          cell.classList.contains(obstacleClass)
-        );
-        // to do: use a forEach, but mind cell and i
-        for (let i = 0; i < laneCells.length; i++) {
-          const cell = laneCells[i];
-          switch (gameLane.direction) {
-            case "left":
-              if (previousObstacles[(i + 1) % laneCells.length]) {
-                cell.classList.add(obstacleClass);
-              } else {
-                cell.classList.remove(obstacleClass);
+      if (gameLane.type === "safezone") {
+        continue;
+      }
+
+      const timer = setInterval(() => {
+        if (!isGamePaused) {
+          const previousObstacles = laneCells.map((cell) =>
+            cell.classList.contains(obstacleClass)
+          );
+          // to do: use a forEach, but mind cell and i
+          for (let i = 0; i < laneCells.length; i++) {
+            const cell = laneCells[i];
+            switch (gameLane.direction) {
+              case "left":
+                if (previousObstacles[(i + 1) % laneCells.length]) {
+                  cell.classList.add(obstacleClass);
+                } else {
+                  cell.classList.remove(obstacleClass);
+                }
+                break;
+              case "right": {
+                if (
+                  previousObstacles[
+                    (i - 1 + laneCells.length) % laneCells.length
+                  ]
+                ) {
+                  cell.classList.add(obstacleClass);
+                } else {
+                  cell.classList.remove(obstacleClass);
+                }
+                break;
               }
-              break;
-            case "right": {
-              if (
-                previousObstacles[(i - 1 + laneCells.length) % laneCells.length]
-              ) {
-                cell.classList.add(obstacleClass);
-              } else {
-                cell.classList.remove(obstacleClass);
-              }
-              break;
             }
           }
-        }
 
-        evaluatePlayerPosition();
-      }
-    }, gameLane.intervalSpeed);
-    timers.push(timer);
+          evaluatePlayerPosition();
+        }
+      }, gameLane.intervalSpeed * multiplier);
+      timers.push(timer);
+    }
   }
 
   // check keystroke and move player accordingly
@@ -332,12 +347,22 @@ function init() {
     isGamePaused = true;
   }
   function gameOver() {
-    alert("Game Over!");
+    // alert("Game Over!");
+    overlayOn();
   }
   function gameWon() {
     isGamePaused = true;
     alert("You won! All foxes are home safely!");
   }
+
+  // function makeGameMediumDifficult(event, gameLane) {
+  //   if (game.lanes.type === "safezone") {
+  //     return;
+  //   }
+  //   gameLane.forEach(
+  //     (el) => (gameLane.intervalSpeed = gameLane.intervalSpeed - 2000)
+  //   );
+  // }
 
   function goalLane() {
     cells[0].at(3).classList.add("goal");
@@ -349,14 +374,23 @@ function init() {
       }
     });
   }
-  // function clearTimers() {
-  //   timers.forEach((timer) => clearInterval(timer));
-  // }
+  function overlayOn() {
+    document.getElementById("overlay").style.display = "block";
+  }
 
-  setupGrid();
+  function clearTimers() {
+    timers.forEach((timer) => clearInterval(timer));
+  }
+
+  loadGame();
 
   // start listening to key events
   document.addEventListener("keyup", handleKeyUp);
+  startButton.addEventListener("click", loadGame);
+  mediumDifficultyButton.addEventListener("click", function () {
+    clearTimers();
+    moveObstacles(0.5);
+  });
 
   resetPlayerPosition();
   // move player to initial position

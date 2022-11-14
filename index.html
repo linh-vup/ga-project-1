@@ -12,6 +12,9 @@
   <h1>Foxxers - A Froggers game</h1>
   <div class="controls-wrapper">
     <button id="start">Start Game</button>
+    <button id="easy-game">Easy</button>
+    <button id="medium-game">Medium</button>
+    <button id="difficult-game">Difficult</button>
     <h3>Lives left: <span id="lives">5</span></h3>
     <h3>Foxes at home <span id="in-goal">0</span></h3>
 
@@ -20,7 +23,10 @@
     <div class="grid"></div>
   </div>
   <div class="overlay">
-    <div id="overlay"></div>
+    <div id="overlay">
+      <h1>You lost!</h1>
+      <button id="restart"></button>
+    </div>
   </div>
 
 </body>
