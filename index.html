@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="scripts/app.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="./styles/main.css">
-</head>
-<body>
-  <h1>Foxxers - A Froggers game</h1>
-  <div class="controls-wrapper">
-    <button id="start">Start Game</button>
-    <button id="easy-game">Easy</button>
-    <button id="medium-game">Medium</button>
-    <button id="difficult-game">Difficult</button>
-    <h3>Lives left: <span id="lives">5</span></h3>
-    <h3>Foxes at home <span id="in-goal">0</span></h3>
-
-  </div>
-  <div class="grid-wrapper">
-    <div class="grid"></div>
-  </div>
-  <div class="overlay">
-    <div id="overlay">
-      <h1>You lost!</h1>
-      <button id="restart"></button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="scripts/app.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Foxxers - A Froggers game</h1>
+    </header>
+    <div class="top-section">
+      <div class="instructions">
+      <p>
+        Help three foxes find their way home. Carefully cross the road and avoid
+        contact with traffic. Once you reach the canal, make sure to hide from
+        any humans. Our foxes don't know how to swim, so jump aboard everything
+        that will help them not get wet.
+      </p>
+      <p>Use arrow keys to move up, down, left or right.</p>
     </div>
-  </div>
-
-</body>
+    <div class="controls-wrapper">
+      <button id="start">Start Game</button>
+      <button id="easy-game">Easy</button>
+      <button id="medium-game">Medium</button>
+      <button id="difficult-game">Difficult</button>
+      <h3>Lives left: <span id="lives">5</span></h3>
+      <h3>Foxes at home <span id="in-goal">0</span>/3</h3>
+    </div>
+    </div>
+    
+    <div class="grid-wrapper">
+      <div class="grid"></div>
+    </div>
+    <div id="overlay">
+      <div class="overlay-content">
+        <div id="overlay-content-game-end">
+          <h1 id="overlay-h1"></h1>
+          <h3 id="overlay-h3"></h3>
+          <button id="restart">Play again</button>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
