@@ -77,117 +77,117 @@ align-items: baseline;
 }
 
 .grid .cell.foxy {
-  background-image: url(../images/lil_fox.gif);
+  background-image: url(../Images/lil_fox.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
 .grid #lane-0 {
-  background-image: url(../images/green.png);
+  background-image: url(../Images/green.png);
   background-size: contain;
 }
 .grid #lane-1 {
-  background-image: url(../images/boat_pixel.png), url(../images/gras_water_2.png);
+  background-image: url(../Images/boat_pixel.png), url(../Images/gras_water_2.png);
   background-size: contain;
 }
 .grid #lane-2 {
-  background-image: url(../images/log.png), url(../images/water.png);
+  background-image: url(../Images/log.png), url(../Images/water.png);
   background-size: contain;
 }
 
 .grid #lane-3 {
-  background-image: url(../images/lilypad2.png), url(../images/water.png) ;
+  background-image: url(../Images/lilypad2.png), url(../Images/water.png) ;
   background-size: contain;
   background-position: bottom;
 }
 
 .grid #lane-4 {
-  background-image: url(../images/gras_water.png);
+  background-image: url(../Images/gras_water.png);
   background-size: contain;
 }
 .grid #lane-5 {
-  background-image: url(../images/green.png);
+  background-image: url(../Images/green.png);
   background-size: contain;
 }
 .grid #lane-6 {
-  background-image: url(../images/green.png);
+  background-image: url(../Images/green.png);
   background-size: contain;
 }
 
 .grid #lane-7 {
-  background-image: url(../images/street_gutter.png);
+  background-image: url(../Images/street_gutter.png);
   background-size: contain;
 }
 .grid #lane-8 {
-  background-image: url(../images/street_yellow_line.png);
+  background-image: url(../Images/street_yellow_line.png);
   background-size: contain;
 }
 .grid #lane-9 {
-  background-image: url(../images/street.png);
+  background-image: url(../Images/street.png);
   background-size: contain;
 }
 .grid #lane-10 {
-  background-image: url(../images/pavement.png);
+  background-image: url(../Images/pavement.png);
   background-size: contain;
 }
 .grid #lane-11 {
-  background-image: url(../images/green.png);
+  background-image: url(../Images/green.png);
   background-size: contain;
 }
 .grid #lane-1 .obstacle {
-  background-image: url(../images/water_wave.gif);
+  background-image: url(../Images/water_wave.gif);
   background-position: bottom;
 }
 .grid #lane-2 .obstacle {
-  background-image: url(../images/water_wave.gif), url(../images/water.png);
+  background-image: url(../Images/water_wave.gif), url(../Images/water.png);
   background-position: bottom;
 }
 .grid #lane-3 .obstacle {
-  background-image: url(../images/water_wave.gif), url(../images/water.png);
+  background-image: url(../Images/water_wave.gif), url(../Images/water.png);
   background-position: bottom;
 }
 .grid #lane-4 .obstacle {
-  background-image: url(../images/jogger.gif);
+  background-image: url(../Images/jogger.gif);
 }
 
 .grid #lane-6 .blocked-cells {
-  background-image: url(../images/bush.png);
+  background-image: url(../Images/bush.png);
   background-repeat: no-repeat;
 }
 .grid #lane-7 .obstacle {
-  background-image: url(../images/doubledecker1.gif);
+  background-image: url(../Images/doubledecker1.gif);
 }
 
 .grid #lane-8 .obstacle {
-  background-image: url(../images/cartoright.gif);
+  background-image: url(../Images/cartoright.gif);
 }
 
 .grid #lane-9 .obstacle {
-  background-image: url(../images/pixelbike.gif);
+  background-image: url(../Images/pixelbike.gif);
 }
 .grid #lane-10 .obstacle {
-  background-image: url(../images/scootertoleft.gif);
+  background-image: url(../Images/scootertoleft.gif);
 }
 .grid #lane-11 .obstacle {
-  background-image: url(../images/bicycle.gif);
+  background-image: url(../Images/bicycle.gif);
 }
 
 .grid #clash {
-  background-image: url(../images/blobfox_angrylaugh.png) !important;
+  background-image: url(../Images/blobfox_angrylaugh.png) !important;
 }
 
 .grid .cell.goal {
   /* border: 1px solid lightgrey; */
-  background-image: url(../images/nest.png);
+  background-image: url(../Images/nest.png);
   background-size: contain;
 }
 
 #lane-0 .blocked-cells {
-  background-image: url(../images/bush.png);
+  background-image: url(../Images/bush.png);
   background-size: contain;
 }
 
 .grid .cell.goal.foxyWinner {
-  background-image: url(../images/sleepingfox.gif), url(../images/nest.png);
+  background-image: url(../Images/sleepingfox.gif), url(../Images/nest.png);
   background-repeat: no-repeat;
   background-size: contain;
 }
