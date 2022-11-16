@@ -7,40 +7,76 @@
     <title>Document</title>
     <script src="scripts/app.js" charset="utf-8"></script>
     <link rel="stylesheet" href="./styles/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
   </head>
   <body>
     <header>
       <h1>Foxxers - A Froggers game</h1>
+      <span class="material-symbols-outlined" id="settings-icon">settings</span>
     </header>
     <div class="top-section">
       <div class="instructions">
-      <p>
-        Help three foxes find their way home. Carefully cross the road and avoid
-        contact with traffic. Once you reach the canal, make sure to hide from
-        any humans. Our foxes don't know how to swim, so jump aboard everything
-        that will help them not get wet.
-      </p>
-      <p>Use arrow keys to move up, down, left or right.</p>
+        <p>
+          Help three foxes find their way home. Carefully cross the road and
+          avoid contact with traffic. Once you reach the canal, make sure to
+          hide from any humans. Our foxes don't know how to swim, so jump aboard
+          everything that will help them not get wet.
+        </p>
+        <p>Use arrow keys to move up, down, left or right.</p>
+      </div>
+      <div class="controls-wrapper">
+        <h3>Lives left: <span id="lives">5</span></h3>
+        <h3>Foxes at home <span id="in-goal">0</span>/3</h3>
+      </div>
     </div>
-    <div class="controls-wrapper">
-      <button id="start">Start Game</button>
-      <button id="easy-game">Easy</button>
-      <button id="medium-game">Medium</button>
-      <button id="difficult-game">Difficult</button>
-      <h3>Lives left: <span id="lives">5</span></h3>
-      <h3>Foxes at home <span id="in-goal">0</span>/3</h3>
-    </div>
-    </div>
-    
+
     <div class="grid-wrapper">
       <div class="grid"></div>
     </div>
-    <div id="overlay">
+    <div id="overlay-settings">
+      <div id="overlay-content-settings">
+        <div class="overlay-content">
+          <span class="material-symbols-outlined" id="close-icon">close </span>
+          <h2>Game Settings</h2>
+          <div class="difficulty-wrapper">
+            <form id="form-difficulty">
+              <fieldset>
+                <legend>Select difficulty level:</legend>
+                <div>
+                  <input type="radio" id="easy" name="difficulty" value="easy" checked />
+                  <label for="easy">Easy</label>
+                </div>
+                <div>
+                  <input type="radio" id="medium" name="difficulty" value="medium" />
+                  <label for="medium">Medium</label>
+                </div>
+                <div>
+                  <input type="radio" id="difficult" name="difficulty" value="difficult" />
+                  <label for="medium">Difficult</label>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <!-- <button id="start">Start Game</button> -->
+        </div>
+      </div>
+    </div>
+    <div id="overlay-game-end">
       <div class="overlay-content">
         <div id="overlay-content-game-end">
           <h1 id="overlay-h1"></h1>
           <h3 id="overlay-h3"></h3>
           <button id="restart">Play again</button>
+          <p>
+            *If you need a break, you can watch
+            <a href="https://www.tiktok.com/@johnnyfoxxy" target="_blank"
+              >this TikTok channel</a
+            >
+            about a London guy and his foxes
+          </p>
         </div>
       </div>
     </div>

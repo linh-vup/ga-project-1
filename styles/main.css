@@ -13,14 +13,33 @@ body {
   background-color: #d77b3f;
 }
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin: 25px 30px;
 }
 
 button {
   font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 20px;
 }
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48;
+  cursor: pointer;
+}
+
+
 .instructions {
   margin: 15px 30px;
+}
+
+.difficulty-wrapper {
+  font-size: 20px;
 }
 .grid-wrapper {
   height: 90vh;
@@ -40,7 +59,7 @@ button {
 }
 
 .grid .cell {
-  /* border: 1px solid lightgrey; */
+  border: 1px solid lightgrey;
   width: 60px;
   height: 60px;
 }
@@ -162,7 +181,23 @@ button {
   background-size: contain;
 }
 
-#overlay {
+#overlay-game-end {
+  position: fixed; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0%;
+  left: 0%;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(27, 53, 32, 0.8); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#overlay-settings {
   position: fixed; /* Sit on top of the page content */
   display: none; /* Hidden by default */
   width: 100%; /* Full width (cover the whole page) */

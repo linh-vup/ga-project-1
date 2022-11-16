@@ -4,11 +4,15 @@ function init() {
   const goalDisplay = document.querySelector("#in-goal");
   const startButton = document.querySelector("#start");
   const restartButton = document.querySelector("#restart");
-  const easyButton = document.querySelector("#easy-game");
-  const mediumButton = document.querySelector("#medium-game");
-  const difficultButton = document.querySelector("#difficult-game");
+  // const easyButton = document.querySelector("#easy-game");
+  // const mediumButton = document.querySelector("#medium-game");
+  // const difficultButton = document.querySelector("#difficult-game");
+  const unhingedButton = document.querySelector("#unhinged-game");
   const overlayHeaderOneText = document.querySelector("#overlay-h1");
   const overlayHeaderThreeText = document.querySelector("#overlay-h3");
+  const settingsIcon = document.querySelector("#settings-icon");
+  const closeSettingsIcon = document.querySelector("#close-icon");
+  const difficultyForm = document.querySelector("#form-difficulty");
 
   // define game config
   const game = {
@@ -17,6 +21,7 @@ function init() {
       {
         laneRow: 0,
         type: "safezone",
+        targetCount: 3,
       },
       {
         laneRow: 1,
@@ -80,7 +85,7 @@ function init() {
         laneRow: 7,
         type: "obstacle",
         direction: "left",
-        intervalSpeed: 2000,
+        intervalSpeed: 1800,
         movesCharacter: false,
         obstacle: {
           length: 2,
@@ -113,7 +118,7 @@ function init() {
         laneRow: 10,
         type: "obstacle",
         direction: "left",
-        intervalSpeed: 3500,
+        intervalSpeed: 3200,
         movesCharacter: false,
         obstacle: {
           length: 1,
@@ -365,7 +370,7 @@ function init() {
     ) {
       if (playersInGoal < 3) {
         addPlayerToGoal();
-        setTimeout(anotherTurn, 1500);
+        setTimeout(anotherTurn, 1000);
       }
       if (playersInGoal === 3) {
         setTimeout(gameWon, 500);
@@ -394,7 +399,6 @@ function init() {
   let gameStatus = "";
 
   function gameOver() {
-    // alert("Game Over!");
     clearTimers();
     gameStatus = "lost";
     overlayOn();
@@ -425,18 +429,24 @@ function init() {
     });
   }
   function overlayOn() {
-    document.getElementById("overlay").style.display = "flex";
+    document.getElementById("overlay-game-end").style.display = "flex";
     if (gameStatus === "won") {
       overlayHeaderOneText.innerHTML = "Congratulations!";
       overlayHeaderThreeText.innerHTML =
-        "All three foxes are home. Would you like to help the next skulk of foxes to get home?";
+        "All three foxes are home. Would you like to help the next skulk of foxes to get home, maybe with a more difficult level?";
     } else {
       overlayHeaderOneText.innerHTML = "Oh no!";
       overlayHeaderThreeText.innerHTML = "Would you like to try again?";
     }
   }
   function overlayOff() {
-    document.getElementById("overlay").style.display = "none";
+    document.getElementById("overlay-game-end").style.display = "none";
+  }
+  function settingsOverlayOn() {
+    document.getElementById("overlay-settings").style.display = "flex";
+  }
+  function settingsOverlayOff() {
+    document.getElementById("overlay-settings").style.display = "none";
   }
 
   function clearTimers() {
@@ -461,24 +471,29 @@ function init() {
     goalDisplay.innerHTML = playersInGoal;
   }
 
+  function chooseDifficulty(event) {
+    if (document.getElementById("easy").checked) {
+      clearTimers();
+      moveObstacles(1);
+    } else if (document.getElementById("medium").checked) {
+      clearTimers();
+      moveObstacles(0.4);
+    } else {
+      clearTimers();
+      moveObstacles(0.2);
+    }
+  }
+
   loadGame();
 
   // start listening to key events
   document.addEventListener("keyup", handleKeyUp);
-  startButton.addEventListener("click", loadGame);
+  // startButton.addEventListener("click", loadGame);
   restartButton.addEventListener("click", restartGame);
-  easyButton.addEventListener("click", function () {
-    clearTimers();
-    moveObstacles(1);
-  });
-  mediumButton.addEventListener("click", function () {
-    clearTimers();
-    moveObstacles(0.5);
-  });
-  difficultButton.addEventListener("click", function () {
-    clearTimers();
-    moveObstacles(0.2);
-  });
+  difficultyForm.addEventListener("change", chooseDifficulty);
+
+  settingsIcon.addEventListener("click", settingsOverlayOn);
+  closeSettingsIcon.addEventListener("click", settingsOverlayOff);
   window.addEventListener(
     "keydown",
     function (e) {
