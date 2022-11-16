@@ -86,7 +86,7 @@ align-items: baseline;
   background-size: contain;
 }
 .grid #lane-1 {
-  background-image: url(../images/gras_water_2.png);
+  background-image: url(../images/boat_pixel.png), url(../images/gras_water_2.png);
   background-size: contain;
 }
 .grid #lane-2 {
