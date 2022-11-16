@@ -33,10 +33,16 @@ button {
   cursor: pointer;
 }
 
-
+.top-section {
+  display: flex;
+align-items: baseline;
+}
 .instructions {
   margin: 15px 30px;
+  width: 50%;
 }
+
+
 
 .difficulty-wrapper {
   font-size: 20px;
@@ -172,6 +178,11 @@ button {
 .grid .cell.goal {
   /* border: 1px solid lightgrey; */
   background-image: url(../images/nest.png);
+  background-size: contain;
+}
+
+#lane-0 .blocked-cells {
+  background-image: url(../images/bush.png);
   background-size: contain;
 }
 
