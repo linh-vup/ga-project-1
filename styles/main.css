@@ -59,7 +59,7 @@ button {
 }
 
 .grid .cell {
-  border: 1px solid lightgrey;
+  /* border: 1px solid lightgrey; */
   width: 60px;
   height: 60px;
 }
