@@ -16,7 +16,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 25px 30px;
+  margin: 25px 30px 5px 30px;
 }
 
 button {
@@ -35,7 +35,7 @@ button {
 
 .top-section {
   display: flex;
-align-items: baseline;
+  align-items: baseline;
 }
 .instructions {
   margin: 15px 30px;

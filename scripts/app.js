@@ -10,6 +10,7 @@ function init() {
   const settingsIcon = document.querySelector("#settings-icon");
   const closeSettingsIcon = document.querySelector("#close-icon");
   const difficultyForm = document.querySelector("#form-difficulty");
+  let radioButtonDefault = document.getElementById("easy");
 
   // define game config
   const game = {
@@ -462,6 +463,9 @@ function init() {
     moveObstacles(1);
     resetPlayerPosition();
     gameState.state = "running";
+    gameState.difficulty = "easy";
+    difficultyDisplay.innerHTML = "Easy";
+    radioButtonDefault.checked = true;
     gameState.playerLives = 5;
     livesDisplay.innerHTML = gameState.playerLives;
     gameState.playersInGoal = 0;
@@ -482,7 +486,7 @@ function init() {
       difficultyDisplay.innerHTML = "Medium";
     } else if (document.getElementById("difficult").checked) {
       clearTimers();
-      moveObstacles(1);
+      moveObstacles(0.2);
       gameState.difficulty = "difficult";
       difficultyDisplay.innerHTML = "Difficult";
     } else if (document.getElementById("unhinged").checked) {
