@@ -132,6 +132,11 @@ function init() {
     ],
   };
 
+  const gameState = {
+    state: "running",
+    playersInGoal: 0,
+    playerLives: 5,
+  };
   // keeps track of player's coordinates
   const playerPosition = {
     x: 0,
@@ -145,9 +150,6 @@ function init() {
   const cells = [];
 
   const timers = [];
-  let playerLives = 5;
-  let isGamePaused = false;
-  let playersInGoal = 0;
 
   function loadGame() {
     setupGrid();
@@ -226,7 +228,7 @@ function init() {
       }
 
       const timer = setInterval(() => {
-        if (!isGamePaused) {
+        if (gameState.state === "running") {
           const previousObstacles = laneCells.map((cell) =>
             cell.classList.contains(obstacleClass)
           );
@@ -280,7 +282,7 @@ function init() {
 
   // check keystroke and move player accordingly
   function handleKeyUp(event) {
-    if (isGamePaused) {
+    if (gameState.state !== "running") {
       return;
     }
     switch (
@@ -357,7 +359,7 @@ function init() {
   // checks if player landed on obstacles or reached last lane. if so, end game.
   function evaluatePlayerPosition() {
     if (getPlayerPositionCell().classList.contains(obstacleClass)) {
-      if (playerLives > 0) {
+      if (gameState.playerLives > 0) {
         removePlayerLives();
         getPlayerPositionCell().setAttribute("id", "clash");
         setTimeout(anotherTurn, 1500);
@@ -368,11 +370,11 @@ function init() {
       getPlayerPositionCell().classList.contains("goal") &&
       !getPlayerPositionCell().classList.contains("foxyWinner")
     ) {
-      if (playersInGoal < 3) {
+      if (gameState.playersInGoal < 3) {
         addPlayerToGoal();
         setTimeout(anotherTurn, 1000);
       }
-      if (playersInGoal === 3) {
+      if (gameState.playersInGoal === 3) {
         setTimeout(gameWon, 500);
       }
     }
@@ -382,30 +384,27 @@ function init() {
   function anotherTurn() {
     getPlayerPositionCell().removeAttribute("id");
     resetPlayerPosition();
-    isGamePaused = false;
+    gameState.state = "running";
   }
   function removePlayerLives() {
-    playerLives--;
-    livesDisplay.innerHTML = playerLives;
-    isGamePaused = true;
+    gameState.playerLives--;
+    livesDisplay.innerHTML = gameState.playerLives;
+    gameState.state = "paused";
   }
   function addPlayerToGoal() {
     getPlayerPositionCell().classList.add("foxyWinner");
-    playersInGoal++;
-    goalDisplay.innerHTML = playersInGoal;
-    isGamePaused = true;
+    gameState.playersInGoal++;
+    goalDisplay.innerHTML = gameState.playersInGoal;
+    gameState.state = "paused";
   }
-
-  let gameStatus = "";
 
   function gameOver() {
     clearTimers();
-    gameStatus = "lost";
+    gameState.state = "lost";
     overlayOn();
   }
   function gameWon() {
-    isGamePaused = true;
-    gameStatus = "won";
+    gameState.state = "won";
     overlayOn();
   }
 
@@ -430,7 +429,7 @@ function init() {
   }
   function overlayOn() {
     document.getElementById("overlay-game-end").style.display = "flex";
-    if (gameStatus === "won") {
+    if (gameState.state === "won") {
       overlayHeaderOneText.innerHTML = "Congratulations!";
       overlayHeaderThreeText.innerHTML =
         "All three foxes are home. Would you like to help the next skulk of foxes to get home, maybe with a more difficult level?";
@@ -441,13 +440,14 @@ function init() {
   }
   function overlayOff() {
     document.getElementById("overlay-game-end").style.display = "none";
+    document.getElementById("overlay-settings").style.display = "none";
   }
   function settingsOverlayOn() {
     document.getElementById("overlay-settings").style.display = "flex";
   }
-  function settingsOverlayOff() {
-    document.getElementById("overlay-settings").style.display = "none";
-  }
+  // function settingsOverlayOff() {
+  //   document.getElementById("overlay-settings").style.display = "none";
+  // }
 
   function clearTimers() {
     timers.forEach((timer) => clearInterval(timer));
@@ -465,10 +465,11 @@ function init() {
     });
     moveObstacles(1);
     resetPlayerPosition();
-    playerLives = 5;
-    livesDisplay.innerHTML = playerLives;
-    playersInGoal = 0;
-    goalDisplay.innerHTML = playersInGoal;
+    gameState.state = "running";
+    gameState.playerLives = 5;
+    livesDisplay.innerHTML = gameState.playerLives;
+    gameState.playersInGoal = 0;
+    goalDisplay.innerHTML = gameState.playersInGoal;
   }
 
   function chooseDifficulty(event) {
@@ -493,7 +494,7 @@ function init() {
   difficultyForm.addEventListener("change", chooseDifficulty);
 
   settingsIcon.addEventListener("click", settingsOverlayOn);
-  closeSettingsIcon.addEventListener("click", settingsOverlayOff);
+  closeSettingsIcon.addEventListener("click", overlayOff);
   window.addEventListener(
     "keydown",
     function (e) {

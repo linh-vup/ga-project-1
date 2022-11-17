@@ -86,7 +86,7 @@ align-items: baseline;
   background-size: contain;
 }
 .grid #lane-1 {
-  background-image: url(../Images/boat_pixel.png), url(../Images/gras_water_2.png);
+  background-image: url(../Images/log.png), url(../Images/gras_water_2.png);
   background-size: contain;
 }
 .grid #lane-2 {
@@ -134,7 +134,7 @@ align-items: baseline;
   background-size: contain;
 }
 .grid #lane-1 .obstacle {
-  background-image: url(../Images/water_wave.gif);
+  background-image: url(../Images/water_wave.gif), url(../Images/gras_water_2.png);
   background-position: bottom;
 }
 .grid #lane-2 .obstacle {
