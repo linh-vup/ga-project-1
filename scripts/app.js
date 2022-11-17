@@ -2,12 +2,9 @@ function init() {
   const grid = document.querySelector(".grid");
   const livesDisplay = document.querySelector("#lives");
   const goalDisplay = document.querySelector("#in-goal");
+  const difficultyDisplay = document.querySelector("#difficulty-display");
   const startButton = document.querySelector("#start");
   const restartButton = document.querySelector("#restart");
-  // const easyButton = document.querySelector("#easy-game");
-  // const mediumButton = document.querySelector("#medium-game");
-  // const difficultButton = document.querySelector("#difficult-game");
-  const unhingedButton = document.querySelector("#unhinged-game");
   const overlayHeaderOneText = document.querySelector("#overlay-h1");
   const overlayHeaderThreeText = document.querySelector("#overlay-h3");
   const settingsIcon = document.querySelector("#settings-icon");
@@ -136,6 +133,7 @@ function init() {
     state: "running",
     playersInGoal: 0,
     playerLives: 5,
+    difficulty: "easy",
   };
   // keeps track of player's coordinates
   const playerPosition = {
@@ -174,7 +172,6 @@ function init() {
         laneCells.push(cell);
       }
 
-      // console.log(laneCells);
       cells.push(laneCells);
       grid.appendChild(laneDiv);
     }
@@ -340,15 +337,11 @@ function init() {
 
   // move player to position x, y
   function movePlayer(x, y) {
-    console.log(x, y);
     getPlayerPositionCell().classList.remove("foxy");
 
     playerPosition.x = x;
     playerPosition.y = y;
 
-    // console.log(playerPosition);
-    // console.log(cells);
-    // console.log(cells[playerPosition.y][playerPosition.x]);
     getPlayerPositionCell().classList.add("foxy");
     evaluatePlayerPosition();
   }
@@ -406,16 +399,15 @@ function init() {
   function gameWon() {
     gameState.state = "won";
     overlayOn();
+    if (gameState.state === "won" && gameState.difficulty === "difficult") {
+      unlockUnhingedLevel();
+    }
+    console.log(gameState.state, gameState.difficulty);
   }
 
-  // function makeGameMediumDifficult(event, gameLane) {
-  //   if (game.lanes.type === "safezone") {
-  //     return;
-  //   }
-  //   gameLane.forEach(
-  //     (el) => (gameLane.intervalSpeed = gameLane.intervalSpeed - 2000)
-  //   );
-  // }
+  function unlockUnhingedLevel() {
+    document.getElementById("unhinged-div").style.display = "block";
+  }
 
   function goalLane() {
     cells[0].at(3).classList.add("goal");
@@ -429,11 +421,15 @@ function init() {
   }
   function overlayOn() {
     document.getElementById("overlay-game-end").style.display = "flex";
-    if (gameState.state === "won") {
+    if (gameState.state === "won" && gameState.difficulty === "difficult") {
+      overlayHeaderOneText.innerHTML = "Easter Egg unlocked!";
+      overlayHeaderThreeText.innerHTML =
+        "You can now choose from another difficulty level! Go to game settings to check it out";
+    } else if (gameState.state === "won") {
       overlayHeaderOneText.innerHTML = "Congratulations!";
       overlayHeaderThreeText.innerHTML =
         "All three foxes are home. Would you like to help the next skulk of foxes to get home, maybe with a more difficult level?";
-    } else {
+    } else if (gameState.state === "lost") {
       overlayHeaderOneText.innerHTML = "Oh no!";
       overlayHeaderThreeText.innerHTML = "Would you like to try again?";
     }
@@ -472,16 +468,28 @@ function init() {
     goalDisplay.innerHTML = gameState.playersInGoal;
   }
 
+  //refactor
   function chooseDifficulty(event) {
     if (document.getElementById("easy").checked) {
       clearTimers();
       moveObstacles(1);
+      gameState.difficulty = "easy";
+      difficultyDisplay.innerHTML = "Easy";
     } else if (document.getElementById("medium").checked) {
       clearTimers();
       moveObstacles(0.4);
-    } else {
+      gameState.difficulty = "medium";
+      difficultyDisplay.innerHTML = "Medium";
+    } else if (document.getElementById("difficult").checked) {
       clearTimers();
-      moveObstacles(0.2);
+      moveObstacles(1);
+      gameState.difficulty = "difficult";
+      difficultyDisplay.innerHTML = "Difficult";
+    } else if (document.getElementById("unhinged").checked) {
+      clearTimers();
+      moveObstacles(0.05);
+      gameState.difficulty = "unhinged";
+      difficultyDisplay.innerHTML = "Unhinged";
     }
   }
 

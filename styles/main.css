@@ -48,10 +48,14 @@ align-items: baseline;
   font-size: 20px;
 }
 .grid-wrapper {
-  height: 90vh;
+  height: 75vh;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#unhinged-div {
+  display: none;
 }
 
 .grid {
