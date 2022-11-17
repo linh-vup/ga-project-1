@@ -8,7 +8,6 @@
 body {
   height: 100vh;
   margin: 0;
-  font-family: 'VT323', monospace;
   font-family: 'Be Vietnam Pro', sans-serif;
   background-color: #d77b3f;
 }
@@ -16,12 +15,16 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 25px 30px 5px 30px;
+  margin: 25px 30px 20px 30px;
 }
 
 button {
   font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 20px;
+}
+
+.main-section {
+  display: flex;
 }
 
 .material-symbols-outlined {
@@ -33,20 +36,20 @@ button {
   cursor: pointer;
 }
 
-.top-section {
+/* .top-section {
   display: flex;
   align-items: baseline;
-}
-.instructions {
+} */
+/* .instructions {
   margin: 15px 30px;
   width: 50%;
+} */
+
+.controls-wrapper {
+  margin-left: 30px;
+  margin-right: 20px;
 }
 
-
-
-.difficulty-wrapper {
-  font-size: 20px;
-}
 .grid-wrapper {
   height: 75vh;
   display: flex;
@@ -54,6 +57,9 @@ button {
   align-items: center;
 }
 
+.difficulty-wrapper {
+  font-size: 20px;
+}
 #unhinged-div {
   display: none;
 }
@@ -61,6 +67,7 @@ button {
 .grid {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
   border: 2px solid #d77b3f;
+
 }
 
 .grid .lane {
@@ -195,6 +202,22 @@ button {
   background-repeat: no-repeat;
   background-size: contain;
 }
+#overlay-game-start {
+  position: fixed; /* Sit on top of the page content */
+  display: flex; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0%;
+  left: 0%;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(27, 53, 32, 0.8); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 #overlay-game-end {
   position: fixed; /* Sit on top of the page content */
@@ -229,20 +252,28 @@ button {
   align-items: center;
 }
 
+#overlay-settings .overlay-content {
+  display: block;
+}
+
 .overlay-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 70%;
   padding: 25px;
-  background:rgba(255,255,255, 0.8);
+  background:rgba(315,123,63, 0.8);
   border-radius: 6px;
 }
+
 #overlay-content-game-end {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+
+
 
 /* .overlay-div {} */

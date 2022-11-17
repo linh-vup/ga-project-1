@@ -17,29 +17,30 @@
       <h1>Foxxers - A Froggers game</h1>
       <span class="material-symbols-outlined" id="settings-icon">settings</span>
     </header>
-    <div class="top-section">
-      <div class="instructions">
-        <p>
-          Help three foxes find their way home. Carefully cross the road and
-          avoid contact with traffic. Once you reach the canal, make sure to
-          hide from any humans. Our foxes don't know how to swim, so jump aboard
-          everything that will help them not get wet.
-        </p>
-        <p>Use arrow keys to move up, down, left or right.</p>
-      </div>
+    <section class="main-section">
       <div class="controls-wrapper">
-        <h3>Lives left: <span id="lives">5</span></h3>
-        <h3>Foxes at home: <span id="in-goal">0</span>/3</h3>
-        <h3>Difficulty level: <span id="difficulty-display">Easy</span></h3>
+          <p>Use arrow keys to move up, down, left or right.</p>
+          <h3>Lives left: <span id="lives">5</span></h3>
+          <h3>Foxes at home: <span id="in-goal">0</span>/3</h3>
+          <h3>Difficulty level: <span id="difficulty-display">Easy</span></h3>
       </div>
-    </div>
-
-    <div class="grid-wrapper">
-      <div class="grid"></div>
+      <div class="grid-wrapper">
+        <div class="grid"></div>
+      </div>
+    </section>
+    <div id="overlay-game-start">
+      <div class="overlay-content">
+        <div id="overlay-content-game-start">
+          <h1>Welcome to Foxxers - A Froggers Game</h1>
+          <p>Help three foxes find their way home. Carefully cross the road and avoid contact with traffic. Once you reach the canal, make sure to hide from any humans. Our foxes don't know how to swim, so jump aboard everything that will help them not get wet.</p>
+          <p>You can control difficulty levels and audio in the settings.</p>
+          <button id="start-game">Play Game</button>
+        </div>
+      </div>
     </div>
     <div id="overlay-settings">
-      <div id="overlay-content-settings">
-        <div class="overlay-content">
+      <div class="overlay-content">
+        <div id="overlay-content-settings">
           <span class="material-symbols-outlined" id="close-icon">close </span>
           <h2>Game Settings</h2>
           <div class="difficulty-wrapper">
@@ -47,25 +48,53 @@
               <fieldset>
                 <legend>Select difficulty level:</legend>
                 <div>
-                  <input type="radio" id="easy" name="difficulty" value="easy" checked />
+                  <input
+                    type="radio"
+                    id="easy"
+                    name="difficulty"
+                    value="easy"
+                    checked
+                  />
                   <label for="easy">Easy</label>
                 </div>
                 <div>
-                  <input type="radio" id="medium" name="difficulty" value="medium" />
+                  <input
+                    type="radio"
+                    id="medium"
+                    name="difficulty"
+                    value="medium"
+                  />
                   <label for="medium">Medium</label>
                 </div>
                 <div>
-                  <input type="radio" id="difficult" name="difficulty" value="difficult" />
-                  <label for="medium">Difficult</label>
+                  <input
+                    type="radio"
+                    id="difficult"
+                    name="difficulty"
+                    value="difficult"
+                  />
+                  <label for="diificult">Difficult</label>
                 </div>
                 <div id="unhinged-div">
-                  <input type="radio" id="unhinged" name="difficulty" value="unhinged" />
-                  <label for="medium">Unhinged</label>
+                  <input
+                    type="radio"
+                    id="unhinged"
+                    name="difficulty"
+                    value="unhinged"
+                  />
+                  <label for="unhinged">Unhinged</label>
                 </div>
               </fieldset>
             </form>
           </div>
-          <!-- <button id="start">Start Game</button> -->
+          <div class="audio-wrapper">
+            <span class="material-symbols-outlined" id="volume-on">
+              volume_up
+            </span>
+            <span class="material-symbols-outlined" id="volume-off">
+              volume_off
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -85,5 +114,8 @@
         </div>
       </div>
     </div>
+    <audio loop id="background-audio" src="./sounds/background_music.mp3"></audio>
+    <audio id="crash-sound"></audio>
+    <audio loop id="background-sounds"></audio>
   </body>
 </html>

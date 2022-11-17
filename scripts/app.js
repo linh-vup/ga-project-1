@@ -3,14 +3,22 @@ function init() {
   const livesDisplay = document.querySelector("#lives");
   const goalDisplay = document.querySelector("#in-goal");
   const difficultyDisplay = document.querySelector("#difficulty-display");
-  const startButton = document.querySelector("#start");
+  const startButton = document.querySelector("#start-game");
   const restartButton = document.querySelector("#restart");
   const overlayHeaderOneText = document.querySelector("#overlay-h1");
   const overlayHeaderThreeText = document.querySelector("#overlay-h3");
   const settingsIcon = document.querySelector("#settings-icon");
   const closeSettingsIcon = document.querySelector("#close-icon");
   const difficultyForm = document.querySelector("#form-difficulty");
-  let radioButtonDefault = document.getElementById("easy");
+  const radioButtonDefault = document.getElementById("easy");
+  const backgroundMusicAudioElement =
+    document.querySelector("#background-audio");
+  const crashSoundAudioElement = document.querySelector("#crash-sound");
+  const backgroundSoundAudioElement = document.querySelector(
+    "#background-sound-audio"
+  );
+  const stopBackgroundMusicButton = document.querySelector("#volume-off");
+  const lanes = document.querySelectorAll(".lane");
 
   // define game config
   const game = {
@@ -126,6 +134,7 @@ function init() {
       {
         laneRow: 11,
         type: "safezone",
+        // eslint-disable-next-line comma-dangle
       },
     ],
   };
@@ -356,6 +365,7 @@ function init() {
       if (gameState.playerLives > 0) {
         removePlayerLives();
         getPlayerPositionCell().setAttribute("id", "clash");
+        playClashSound();
         setTimeout(anotherTurn, 1500);
       } else {
         gameOver();
@@ -436,6 +446,7 @@ function init() {
     }
   }
   function overlayOff() {
+    document.getElementById("overlay-game-start").style.display = "none";
     document.getElementById("overlay-game-end").style.display = "none";
     document.getElementById("overlay-settings").style.display = "none";
   }
@@ -497,16 +508,59 @@ function init() {
     }
   }
 
+  function playBackgroundMusic(event) {
+    backgroundMusicAudioElement.play();
+  }
+  function stopBackgroundMusic(event) {
+    backgroundMusicAudioElement.pause();
+    backgroundMusicAudioElement.currentTime = 0;
+  }
+
+  function playClashSound() {
+    crashSoundAudioElement.src = "./sounds/live_lost.mp3";
+    crashSoundAudioElement.play();
+  }
+  //review sound per lane
+
+  function playLaneBackroundSounds(lane) {
+    backgroundSoundAudioElement.src = `./sounds/${lane.target.id}.wav`;
+    backgroundSoundAudioElement.play();
+    console.log(lane.target.id);
+  }
+  // lanes.forEach((lane) => {
+  //   for (let y = 0; y < game.lanes.length; y++) {
+  //     const gameLane = game.lanes[y];
+  //     if (playerPosition.y === y) {
+  //       playLaneBackroundSounds();
+  //     }
+  //     console.log(gameLane);
+  //   }
+  // });
+  cells.forEach((lane) => {
+    for (let y = 0; y < game.lanes.length; y++) {
+      const gameLane = game.lanes[y];
+      if (lane.children.classList.contains(".foxy")) {
+        playLaneBackroundSounds();
+      }
+    }
+  });
+
+  // function play
+
   loadGame();
 
   // start listening to key events
   document.addEventListener("keyup", handleKeyUp);
   // startButton.addEventListener("click", loadGame);
+  startButton.addEventListener("click", () => {
+    overlayOff();
+    playBackgroundMusic();
+  });
   restartButton.addEventListener("click", restartGame);
   difficultyForm.addEventListener("change", chooseDifficulty);
-
   settingsIcon.addEventListener("click", settingsOverlayOn);
   closeSettingsIcon.addEventListener("click", overlayOff);
+  stopBackgroundMusicButton.addEventListener("click", stopBackgroundMusic);
   window.addEventListener(
     "keydown",
     function (e) {
