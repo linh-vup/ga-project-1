@@ -16,7 +16,7 @@ function init() {
   const overlayHeaderThreeText = document.querySelector("#overlay-h3");
   const backgroundMusicAudioElement =
     document.querySelector("#background-audio");
-  const backgroundSoundAudioElement = document.querySelector(
+  const laneSoundAudioElement = document.querySelector(
     "#background-sound-audio"
   );
   const clashSoundAudioElement = document.querySelector("#crash-sound");
@@ -460,9 +460,7 @@ function init() {
   function restartGame() {
     hideAllOverlays();
     clearTimers();
-    grid
-      .querySelectorAll(inGoalClass)
-      .forEach((element) => element.classList.remove(inGoalClass));
+    cells[0].forEach((element) => element.classList.remove(inGoalClass));
     moveObstacles(1);
     resetPlayerPosition();
     gameState.state = "running";
@@ -507,6 +505,14 @@ function init() {
     }
   }
 
+  function playLaneSound() {
+    if (game.lanes[playerPosition.y].hasLaneSound) {
+      laneSoundAudioElement.src = `./sounds/lane-${playerPosition.y}.wav`;
+      laneSoundAudioElement.play();
+    } else {
+      laneSoundAudioElement.pause();
+    }
+  }
   function toggleBackgroundMusic(event) {
     if (gameState.isBackgroundMusicOn) {
       backgroundMusicAudioElement.pause();
@@ -520,28 +526,23 @@ function init() {
   }
 
   function toggleBackgroundSound(event) {
-    if (gameState.isBackgroundSoundOn) {
-      backgroundSoundAudioElement.pause();
+    if (
+      gameState.isBackgroundSoundOn &&
+      gameState.isLaneSoundOn &&
+      gameState.isClashSoundOn
+    ) {
+      laneSoundAudioElement.pause();
       clashSoundAudioElement.pause();
       backgroundSoundToggleButton.innerHTML = "volume_off";
       gameState.isBackgroundSoundOn = false;
       gameState.isLaneSoundOn = false;
       gameState.isClashSoundOn = false;
     } else {
-      backgroundSoundAudioElement.play();
+      laneSoundAudioElement.play();
       backgroundSoundToggleButton.innerHTML = "volume_up";
       gameState.isBackgroundSoundOn = true;
       gameState.isLaneSoundOn = true;
       gameState.isClashSoundOn = true;
-    }
-  }
-
-  function playLaneSound() {
-    if (game.lanes[playerPosition.y].hasLaneSound) {
-      backgroundSoundAudioElement.src = `./sounds/lane-${playerPosition.y}.wav`;
-      backgroundSoundAudioElement.play();
-    } else {
-      backgroundSoundAudioElement.pause();
     }
   }
 
