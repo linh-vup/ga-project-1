@@ -16,10 +16,11 @@ function init() {
   const backgroundSoundAudioElement = document.querySelector(
     "#background-sound-audio"
   );
-  const crashSoundAudioElement = document.querySelector("#crash-sound");
+  const clashSoundAudioElement = document.querySelector("#crash-sound");
   const backgroundMusicToggleButton = document.querySelector("#volume-toggle");
+  const backgroundSoundToggleButton = document.querySelector("#sound-toggle");
 
-  // define game config
+  // defining game configuration
   const game = {
     width: 13,
     lanes: [
@@ -139,12 +140,16 @@ function init() {
     ],
   };
 
+  //defining game state
   const gameState = {
     state: "running",
     playersInGoal: 0,
     playerLives: 5,
     difficulty: "easy",
     isBackgroundMusicOn: true,
+    isBackgroundSoundOn: true,
+    isClashSoundOn: true,
+    isLaneSoundOn: true,
   };
   // keeps track of player's coordinates
   const playerPosition = {
@@ -152,9 +157,10 @@ function init() {
     y: 0,
   };
 
-  // class name that will be used to identify obstacles, player
+  // class name that will be used to identify obstacles, player and player in goal classes
   const obstacleClass = "obstacle";
-  const playerClass = playerClass;
+  const playerClass = "player";
+  const inGoalClass = "playerInGoal";
 
   // array to hold one array per lane, containing all divs for respective lanes
   const cells = [];
@@ -189,7 +195,7 @@ function init() {
       cells.push(laneCells);
       grid.appendChild(laneDiv);
     }
-    goalLane();
+    createGoalLane();
   }
 
   // add obstacle to lane
@@ -241,7 +247,7 @@ function init() {
           const previousObstacles = laneCells.map((cell) =>
             cell.classList.contains(obstacleClass)
           );
-          // to do: use a forEach, but mind cell and i
+
           for (let x = 0; x < laneCells.length; x++) {
             const cell = laneCells[x];
             switch (gameLane.direction) {
@@ -295,55 +301,35 @@ function init() {
       return;
     }
 
-    switch (
-      event.code // * calculate the next position and update it
-    ) {
+    let newX = playerPosition.x;
+    let newY = playerPosition.y;
+
+    switch (event.code) {
       case "ArrowRight":
-        if (
-          playerPosition.x < game.width - 1 &&
-          !cells[playerPosition.y][playerPosition.x + 1].classList.contains(
-            "blocked-cells"
-          )
-        ) {
-          movePlayer(playerPosition.x + 1, playerPosition.y);
-        }
+        newX++;
         break;
       case "ArrowLeft":
-        if (
-          playerPosition.x > 0 &&
-          !cells[playerPosition.y][playerPosition.x - 1].classList.contains(
-            "blocked-cells"
-          )
-        ) {
-          movePlayer(playerPosition.x - 1, playerPosition.y);
-        }
+        newX--;
         break;
       case "ArrowUp":
-        if (
-          playerPosition.y > 0 &&
-          !cells[playerPosition.y - 1][playerPosition.x].classList.contains(
-            "blocked-cells"
-          )
-        ) {
-          movePlayer(playerPosition.x, playerPosition.y - 1);
-        }
+        newY--;
         break;
       case "ArrowDown":
-        if (
-          playerPosition.y < game.lanes.length - 1 &&
-          !cells[playerPosition.y + 1][playerPosition.x].classList.contains(
-            "blocked-cells"
-          )
-        ) {
-          movePlayer(playerPosition.x, playerPosition.y + 1);
-        }
+        newY++;
         break;
       default:
         console.log("invalid key do nothing");
     }
+
+    const isBlocked = cells[newY][newX].classList.contains("blocked-cells");
+    const isOutsideGrid = newX > game.width - 1 || newY > game.lanes.length - 1;
+
+    if (!isBlocked && !isOutsideGrid) {
+      movePlayer(newX, newY);
+    }
   }
 
-  // returns div/dom element of current player position
+  // return div/dom element of current player position
   function getPlayerPositionCell() {
     return cells[playerPosition.y][playerPosition.x];
   }
@@ -364,7 +350,7 @@ function init() {
     movePlayer(Math.floor(game.width / 2), game.lanes.length - 1);
   }
 
-  // checks if player landed on obstacles or reached last lane. if so, end game.
+  // check if player landed on obstacles or reached last lane. if so, end game.
   function evaluatePlayerPosition() {
     if (getPlayerPositionCell().classList.contains(obstacleClass)) {
       removePlayerLife();
@@ -377,7 +363,7 @@ function init() {
       }
     } else if (
       getPlayerPositionCell().classList.contains("goal") &&
-      !getPlayerPositionCell().classList.contains("foxyWinner")
+      !getPlayerPositionCell().classList.contains(inGoalClass)
     ) {
       if (gameState.playersInGoal < 3) {
         addPlayerToGoal();
@@ -403,7 +389,7 @@ function init() {
   }
 
   function addPlayerToGoal() {
-    getPlayerPositionCell().classList.add("foxyWinner");
+    getPlayerPositionCell().classList.add(inGoalClass);
     gameState.playersInGoal++;
     goalDisplay.innerHTML = gameState.playersInGoal;
     gameState.state = "paused";
@@ -428,7 +414,7 @@ function init() {
     document.querySelector("#unhinged-div").style.display = "block";
   }
 
-  function goalLane() {
+  function createGoalLane() {
     cells[0].filter((cell, i) => {
       if (i === 3 || i === 6 || i === 9) {
         cell.classList.add("goal");
@@ -472,8 +458,8 @@ function init() {
     hideAllOverlays();
     clearTimers();
     grid
-      .querySelectorAll(".foxyWinner")
-      .forEach((element) => element.classList.remove("foxyWinner"));
+      .querySelectorAll(inGoalClass)
+      .forEach((element) => element.classList.remove(inGoalClass));
     moveObstacles(1);
     resetPlayerPosition();
     gameState.state = "running";
@@ -486,25 +472,21 @@ function init() {
     goalDisplay.innerHTML = gameState.playersInGoal;
   }
 
-  //refactor
   function chooseDifficulty(event) {
+    clearTimers();
     if (document.querySelector("#easy").checked) {
-      clearTimers();
       moveObstacles(1);
       gameState.difficulty = "easy";
       difficultyDisplay.innerHTML = "Easy";
     } else if (document.querySelector("#medium").checked) {
-      clearTimers();
       moveObstacles(0.4);
       gameState.difficulty = "medium";
       difficultyDisplay.innerHTML = "Medium";
     } else if (document.querySelector("#difficult").checked) {
-      clearTimers();
       moveObstacles(0.2);
       gameState.difficulty = "difficult";
       difficultyDisplay.innerHTML = "Difficult";
     } else if (document.querySelector("#unhinged").checked) {
-      clearTimers();
       moveObstacles(0.05);
       gameState.difficulty = "unhinged";
       difficultyDisplay.innerHTML = "Unhinged";
@@ -515,10 +497,16 @@ function init() {
     backgroundMusicAudioElement.play();
   }
 
+  function playClashSound() {
+    clashSoundAudioElement.src = "./sounds/live_lost.mp3";
+    if (gameState.isClashSoundOn) {
+      clashSoundAudioElement.play();
+    }
+  }
+
   function toggleBackgroundMusic(event) {
     if (gameState.isBackgroundMusicOn) {
       backgroundMusicAudioElement.pause();
-      backgroundMusicAudioElement.currentTime = 0;
       backgroundMusicToggleButton.innerHTML = "volume_off";
       gameState.isBackgroundMusicOn = false;
     } else {
@@ -528,9 +516,21 @@ function init() {
     }
   }
 
-  function playClashSound() {
-    crashSoundAudioElement.src = "./sounds/live_lost.mp3";
-    crashSoundAudioElement.play();
+  function toggleBackgroundSound(event) {
+    if (gameState.isBackgroundSoundOn) {
+      backgroundSoundAudioElement.pause();
+      clashSoundAudioElement.pause();
+      backgroundSoundToggleButton.innerHTML = "volume_off";
+      gameState.isBackgroundSoundOn = false;
+      gameState.isLaneSoundOn = false;
+      gameState.isClashSoundOn = false;
+    } else {
+      backgroundSoundAudioElement.play();
+      backgroundSoundToggleButton.innerHTML = "volume_up";
+      gameState.isBackgroundSoundOn = true;
+      gameState.isLaneSoundOn = true;
+      gameState.isClashSoundOn = true;
+    }
   }
 
   function playLaneSound() {
@@ -555,6 +555,10 @@ function init() {
     backgroundMusicToggleButton.addEventListener(
       "click",
       toggleBackgroundMusic
+    );
+    backgroundSoundToggleButton.addEventListener(
+      "click",
+      toggleBackgroundSound
     );
     window.addEventListener(
       "keydown",

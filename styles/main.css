@@ -39,7 +39,7 @@ a {
   height: 75vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .difficulty-wrapper {
@@ -186,7 +186,7 @@ a {
   background-size: contain;
 }
 
-.grid .cell.goal.foxyWinner {
+.grid .cell.goal.playerInGoal {
   background-image: url(../Images/sleepingfox.gif), url(../Images/nest.png);
   background-repeat: no-repeat;
   background-size: contain;
