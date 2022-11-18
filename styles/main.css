@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Monda:wght@400;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -8,7 +7,7 @@
 body {
   height: 100vh;
   margin: 0;
-  font-family: 'Be Vietnam Pro', sans-serif;
+  font-family: "Monda", sans-serif;
   background-color: #d77b3f;
 }
 header {
@@ -19,31 +18,17 @@ header {
 }
 
 button {
-  font-family: 'Be Vietnam Pro', sans-serif;
+  font-family: "Monda", sans-serif;
   font-size: 20px;
+}
+
+a {
+  color: black;
 }
 
 .main-section {
   display: flex;
 }
-
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 48;
-  cursor: pointer;
-}
-
-/* .top-section {
-  display: flex;
-  align-items: baseline;
-} */
-/* .instructions {
-  margin: 15px 30px;
-  width: 50%;
-} */
 
 .controls-wrapper {
   margin-left: 30px;
@@ -64,21 +49,24 @@ button {
   display: none;
 }
 
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+  cursor: pointer;
+}
+
 .grid {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
   border: 2px solid #d77b3f;
-
+  position: relative;
 }
 
 .grid .lane {
   display: flex;
-  justify-content: center;
 }
 
 .grid .cell {
-  /* border: 1px solid lightgrey; */
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
 }
 
 .grid .obstacle {
@@ -87,8 +75,8 @@ button {
   background-position: center;
 }
 
-.grid .cell.foxy {
-  background-image: url(../Images/lil_fox.gif);
+.grid .cell.player {
+  background-image: url(../Images/player_fox_pixel.gif);
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -106,7 +94,7 @@ button {
 }
 
 .grid #lane-3 {
-  background-image: url(../Images/lilypad2.png), url(../Images/water.png) ;
+  background-image: url(../Images/lilypad2.png), url(../Images/water.png);
   background-size: contain;
   background-position: bottom;
 }
@@ -145,7 +133,8 @@ button {
   background-size: contain;
 }
 .grid #lane-1 .obstacle {
-  background-image: url(../Images/water_wave.gif), url(../Images/gras_water_2.png);
+  background-image: url(../Images/water_wave.gif),
+    url(../Images/gras_water_2.png);
   background-position: bottom;
 }
 .grid #lane-2 .obstacle {
@@ -157,7 +146,7 @@ button {
   background-position: bottom;
 }
 .grid #lane-4 .obstacle {
-  background-image: url(../Images/jogger.gif);
+  background-image: url(../Images/jogger_pixel.gif);
 }
 
 .grid #lane-6 .blocked-cells {
@@ -165,18 +154,18 @@ button {
   background-repeat: no-repeat;
 }
 .grid #lane-7 .obstacle {
-  background-image: url(../Images/doubledecker1.gif);
+  background-image: url(../Images/doubledecker_pixel.gif);
 }
 
 .grid #lane-8 .obstacle {
-  background-image: url(../Images/cartoright.gif);
+  background-image: url(../Images/mini_pixel.gif);
 }
 
 .grid #lane-9 .obstacle {
   background-image: url(../Images/pixelbike.gif);
 }
 .grid #lane-10 .obstacle {
-  background-image: url(../Images/scootertoleft.gif);
+  background-image: url(../Images/scooter_pixel.gif);
 }
 .grid #lane-11 .obstacle {
   background-image: url(../Images/bicycle.gif);
@@ -202,54 +191,30 @@ button {
   background-repeat: no-repeat;
   background-size: contain;
 }
-#overlay-game-start {
-  position: fixed; /* Sit on top of the page content */
-  display: flex; /* Hidden by default */
-  width: 100%; /* Full width (cover the whole page) */
-  height: 100%; /* Full height (cover the whole page) */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
   top: 0%;
   left: 0%;
   right: 0px;
   bottom: 0px;
-  background-color: rgba(27, 53, 32, 0.8); /* Black background with opacity */
-  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-  cursor: pointer; /* Add a pointer on hover */
+  background-color: rgba(27, 53, 32, 0.8);
+  z-index: 2;
+  cursor: pointer;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.overlay#overlay-game-start {
+  display: flex;
 }
 
-#overlay-game-end {
-  position: fixed; /* Sit on top of the page content */
-  display: none; /* Hidden by default */
-  width: 100%; /* Full width (cover the whole page) */
-  height: 100%; /* Full height (cover the whole page) */
-  top: 0%;
-  left: 0%;
-  right: 0px;
-  bottom: 0px;
-  background-color: rgba(27, 53, 32, 0.8); /* Black background with opacity */
-  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-  cursor: pointer; /* Add a pointer on hover */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.overlay#overlay-game-end {
+  display: none;
 }
-#overlay-settings {
-  position: fixed; /* Sit on top of the page content */
-  display: none; /* Hidden by default */
-  width: 100%; /* Full width (cover the whole page) */
-  height: 100%; /* Full height (cover the whole page) */
-  top: 0%;
-  left: 0%;
-  right: 0px;
-  bottom: 0px;
-  background-color: rgba(27, 53, 32, 0.8); /* Black background with opacity */
-  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-  cursor: pointer; /* Add a pointer on hover */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.overlay#overlay-settings {
+  display: none;
 }
 
 #overlay-settings .overlay-content {
@@ -261,9 +226,9 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 70%;
+  max-width: 50%;
   padding: 25px;
-  background:rgba(315,123,63, 0.8);
+  background: rgba(315, 123, 63, 0.8);
   border-radius: 6px;
 }
 
@@ -273,7 +238,3 @@ button {
   justify-content: center;
   align-items: center;
 }
-
-
-
-/* .overlay-div {} */

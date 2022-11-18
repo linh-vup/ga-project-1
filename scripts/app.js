@@ -5,20 +5,19 @@ function init() {
   const difficultyDisplay = document.querySelector("#difficulty-display");
   const startButton = document.querySelector("#start-game");
   const restartButton = document.querySelector("#restart");
-  const overlayHeaderOneText = document.querySelector("#overlay-h1");
-  const overlayHeaderThreeText = document.querySelector("#overlay-h3");
   const settingsIcon = document.querySelector("#settings-icon");
   const closeSettingsIcon = document.querySelector("#close-icon");
   const difficultyForm = document.querySelector("#form-difficulty");
-  const radioButtonDefault = document.getElementById("easy");
+  const radioButtonDefault = document.querySelector("#easy");
+  const overlayHeaderOneText = document.querySelector("#overlay-h1");
+  const overlayHeaderThreeText = document.querySelector("#overlay-h3");
   const backgroundMusicAudioElement =
     document.querySelector("#background-audio");
-  const crashSoundAudioElement = document.querySelector("#crash-sound");
   const backgroundSoundAudioElement = document.querySelector(
     "#background-sound-audio"
   );
-  const stopBackgroundMusicButton = document.querySelector("#volume-off");
-  const lanes = document.querySelectorAll(".lane");
+  const crashSoundAudioElement = document.querySelector("#crash-sound");
+  const backgroundMusicToggleButton = document.querySelector("#volume-toggle");
 
   // define game config
   const game = {
@@ -112,6 +111,7 @@ function init() {
       {
         laneRow: 9,
         type: "obstacle",
+        hasLaneSound: true,
         direction: "left",
         intervalSpeed: 3000,
         movesCharacter: false,
@@ -144,6 +144,7 @@ function init() {
     playersInGoal: 0,
     playerLives: 5,
     difficulty: "easy",
+    isBackgroundMusicOn: true,
   };
   // keeps track of player's coordinates
   const playerPosition = {
@@ -151,8 +152,9 @@ function init() {
     y: 0,
   };
 
-  // class name that will be used to identify obstacles
+  // class name that will be used to identify obstacles, player
   const obstacleClass = "obstacle";
+  const playerClass = playerClass;
 
   // array to hold one array per lane, containing all divs for respective lanes
   const cells = [];
@@ -163,6 +165,8 @@ function init() {
     setupGrid();
     setupObstacles();
     moveObstacles(1);
+    resetPlayerPosition();
+    setupEventListeners();
   }
 
   // populate cells array and add divs to document
@@ -202,8 +206,6 @@ function init() {
       let remainingObstacleCells = obstacleLength;
       let remainingGapCells = 0;
       laneCells.forEach((cell) => {
-        // for (let i = 0; i < laneCells.length; i++) {
-        //   const cell = laneCells[i];
         if (remainingObstacleCells > 0) {
           if (gameLane.type === "fixedObstacle") {
             cell.classList.add("blocked-cells");
@@ -224,7 +226,7 @@ function init() {
     }
   }
 
-  // set timer to move obstacles in lane
+  // set intervals to move obstacles in lane
   function moveObstacles(multiplier) {
     for (let y = 0; y < game.lanes.length; y++) {
       const gameLane = game.lanes[y];
@@ -292,6 +294,7 @@ function init() {
     if (gameState.state !== "running") {
       return;
     }
+
     switch (
       event.code // * calculate the next position and update it
     ) {
@@ -340,32 +343,34 @@ function init() {
     }
   }
 
-  // returns div of current player position
+  // returns div/dom element of current player position
   function getPlayerPositionCell() {
     return cells[playerPosition.y][playerPosition.x];
   }
 
   // move player to position x, y
   function movePlayer(x, y) {
-    getPlayerPositionCell().classList.remove("foxy");
+    getPlayerPositionCell().classList.remove(playerClass);
 
     playerPosition.x = x;
     playerPosition.y = y;
 
-    getPlayerPositionCell().classList.add("foxy");
+    getPlayerPositionCell().classList.add(playerClass);
     evaluatePlayerPosition();
+    playLaneSound();
   }
 
   function resetPlayerPosition() {
     movePlayer(Math.floor(game.width / 2), game.lanes.length - 1);
   }
+
   // checks if player landed on obstacles or reached last lane. if so, end game.
   function evaluatePlayerPosition() {
     if (getPlayerPositionCell().classList.contains(obstacleClass)) {
+      removePlayerLife();
+      playClashSound();
       if (gameState.playerLives > 0) {
-        removePlayerLives();
         getPlayerPositionCell().setAttribute("id", "clash");
-        playClashSound();
         setTimeout(anotherTurn, 1500);
       } else {
         gameOver();
@@ -390,11 +395,13 @@ function init() {
     resetPlayerPosition();
     gameState.state = "running";
   }
-  function removePlayerLives() {
+
+  function removePlayerLife() {
     gameState.playerLives--;
     livesDisplay.innerHTML = gameState.playerLives;
     gameState.state = "paused";
   }
+
   function addPlayerToGoal() {
     getPlayerPositionCell().classList.add("foxyWinner");
     gameState.playersInGoal++;
@@ -405,11 +412,12 @@ function init() {
   function gameOver() {
     clearTimers();
     gameState.state = "lost";
-    overlayOn();
+    showGameEndOverlay();
   }
+
   function gameWon() {
     gameState.state = "won";
-    overlayOn();
+    showGameEndOverlay();
     if (gameState.state === "won" && gameState.difficulty === "difficult") {
       unlockUnhingedLevel();
     }
@@ -417,21 +425,25 @@ function init() {
   }
 
   function unlockUnhingedLevel() {
-    document.getElementById("unhinged-div").style.display = "block";
+    document.querySelector("#unhinged-div").style.display = "block";
   }
 
   function goalLane() {
-    cells[0].at(3).classList.add("goal");
-    cells[0].at(6).classList.add("goal");
-    cells[0].at(9).classList.add("goal");
-    cells[0].filter((cell) => {
-      if (!cell.classList.contains("goal")) {
+    cells[0].filter((cell, i) => {
+      if (i === 3 || i === 6 || i === 9) {
+        cell.classList.add("goal");
+      } else {
         cell.classList.add("blocked-cells");
       }
     });
   }
-  function overlayOn() {
-    document.getElementById("overlay-game-end").style.display = "flex";
+
+  function showSettingsOverlay() {
+    document.querySelector("#overlay-settings").style.display = "flex";
+  }
+
+  function showGameEndOverlay() {
+    document.querySelector("#overlay-game-end").style.display = "flex";
     if (gameState.state === "won" && gameState.difficulty === "difficult") {
       overlayHeaderOneText.innerHTML = "Easter Egg unlocked!";
       overlayHeaderThreeText.innerHTML =
@@ -445,32 +457,23 @@ function init() {
       overlayHeaderThreeText.innerHTML = "Would you like to try again?";
     }
   }
-  function overlayOff() {
-    document.getElementById("overlay-game-start").style.display = "none";
-    document.getElementById("overlay-game-end").style.display = "none";
-    document.getElementById("overlay-settings").style.display = "none";
+
+  function hideAllOverlays() {
+    document.querySelector("#overlay-game-start").style.display = "none";
+    document.querySelector("#overlay-game-end").style.display = "none";
+    document.querySelector("#overlay-settings").style.display = "none";
   }
-  function settingsOverlayOn() {
-    document.getElementById("overlay-settings").style.display = "flex";
-  }
-  // function settingsOverlayOff() {
-  //   document.getElementById("overlay-settings").style.display = "none";
-  // }
 
   function clearTimers() {
     timers.forEach((timer) => clearInterval(timer));
   }
 
   function restartGame() {
-    overlayOff();
+    hideAllOverlays();
     clearTimers();
-    cells.filter((array) => {
-      array.filter((div) => {
-        if (div.classList.contains("foxyWinner")) {
-          div.classList.remove("foxyWinner");
-        }
-      });
-    });
+    grid
+      .querySelectorAll(".foxyWinner")
+      .forEach((element) => element.classList.remove("foxyWinner"));
     moveObstacles(1);
     resetPlayerPosition();
     gameState.state = "running";
@@ -485,22 +488,22 @@ function init() {
 
   //refactor
   function chooseDifficulty(event) {
-    if (document.getElementById("easy").checked) {
+    if (document.querySelector("#easy").checked) {
       clearTimers();
       moveObstacles(1);
       gameState.difficulty = "easy";
       difficultyDisplay.innerHTML = "Easy";
-    } else if (document.getElementById("medium").checked) {
+    } else if (document.querySelector("#medium").checked) {
       clearTimers();
       moveObstacles(0.4);
       gameState.difficulty = "medium";
       difficultyDisplay.innerHTML = "Medium";
-    } else if (document.getElementById("difficult").checked) {
+    } else if (document.querySelector("#difficult").checked) {
       clearTimers();
       moveObstacles(0.2);
       gameState.difficulty = "difficult";
       difficultyDisplay.innerHTML = "Difficult";
-    } else if (document.getElementById("unhinged").checked) {
+    } else if (document.querySelector("#unhinged").checked) {
       clearTimers();
       moveObstacles(0.05);
       gameState.difficulty = "unhinged";
@@ -511,69 +514,62 @@ function init() {
   function playBackgroundMusic(event) {
     backgroundMusicAudioElement.play();
   }
-  function stopBackgroundMusic(event) {
-    backgroundMusicAudioElement.pause();
-    backgroundMusicAudioElement.currentTime = 0;
+
+  function toggleBackgroundMusic(event) {
+    if (gameState.isBackgroundMusicOn) {
+      backgroundMusicAudioElement.pause();
+      backgroundMusicAudioElement.currentTime = 0;
+      backgroundMusicToggleButton.innerHTML = "volume_off";
+      gameState.isBackgroundMusicOn = false;
+    } else {
+      backgroundMusicAudioElement.play();
+      backgroundMusicToggleButton.innerHTML = "volume_up";
+      gameState.isBackgroundMusicOn = true;
+    }
   }
 
   function playClashSound() {
     crashSoundAudioElement.src = "./sounds/live_lost.mp3";
     crashSoundAudioElement.play();
   }
-  //review sound per lane
 
-  function playLaneBackroundSounds(lane) {
-    backgroundSoundAudioElement.src = `./sounds/${lane.target.id}.wav`;
-    backgroundSoundAudioElement.play();
-    console.log(lane.target.id);
-  }
-  // lanes.forEach((lane) => {
-  //   for (let y = 0; y < game.lanes.length; y++) {
-  //     const gameLane = game.lanes[y];
-  //     if (playerPosition.y === y) {
-  //       playLaneBackroundSounds();
-  //     }
-  //     console.log(gameLane);
-  //   }
-  // });
-  cells.forEach((lane) => {
-    for (let y = 0; y < game.lanes.length; y++) {
-      const gameLane = game.lanes[y];
-      if (lane.children.classList.contains(".foxy")) {
-        playLaneBackroundSounds();
-      }
+  function playLaneSound() {
+    if (game.lanes[playerPosition.y].hasLaneSound) {
+      backgroundSoundAudioElement.src = `./sounds/lane-${playerPosition.y}.wav`;
+      backgroundSoundAudioElement.play();
+    } else {
+      backgroundSoundAudioElement.pause();
     }
-  });
+  }
 
-  // function play
+  function setupEventListeners() {
+    document.addEventListener("keyup", handleKeyUp);
+    startButton.addEventListener("click", () => {
+      hideAllOverlays();
+      playBackgroundMusic();
+    });
+    restartButton.addEventListener("click", restartGame);
+    difficultyForm.addEventListener("change", chooseDifficulty);
+    settingsIcon.addEventListener("click", showSettingsOverlay);
+    closeSettingsIcon.addEventListener("click", hideAllOverlays);
+    backgroundMusicToggleButton.addEventListener(
+      "click",
+      toggleBackgroundMusic
+    );
+    window.addEventListener(
+      "keydown",
+      function (e) {
+        if (
+          ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) >
+          -1
+        ) {
+          e.preventDefault();
+        }
+      },
+      false
+    );
+  }
 
   loadGame();
-
-  // start listening to key events
-  document.addEventListener("keyup", handleKeyUp);
-  // startButton.addEventListener("click", loadGame);
-  startButton.addEventListener("click", () => {
-    overlayOff();
-    playBackgroundMusic();
-  });
-  restartButton.addEventListener("click", restartGame);
-  difficultyForm.addEventListener("change", chooseDifficulty);
-  settingsIcon.addEventListener("click", settingsOverlayOn);
-  closeSettingsIcon.addEventListener("click", overlayOff);
-  stopBackgroundMusicButton.addEventListener("click", stopBackgroundMusic);
-  window.addEventListener(
-    "keydown",
-    function (e) {
-      if (
-        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1
-      ) {
-        e.preventDefault();
-      }
-    },
-    false
-  );
-
-  // move player to initial position
-  resetPlayerPosition();
 }
 document.addEventListener("DOMContentLoaded", init);

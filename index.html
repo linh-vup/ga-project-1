@@ -28,7 +28,7 @@
         <div class="grid"></div>
       </div>
     </section>
-    <div id="overlay-game-start">
+    <div class="overlay" id="overlay-game-start">
       <div class="overlay-content">
         <div id="overlay-content-game-start">
           <h1>Welcome to Foxxers - A Froggers Game</h1>
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div id="overlay-settings">
+    <div class="overlay" id="overlay-settings">
       <div class="overlay-content">
         <div id="overlay-content-settings">
           <span class="material-symbols-outlined" id="close-icon">close </span>
@@ -87,18 +87,16 @@
               </fieldset>
             </form>
           </div>
+          <h3>Background music</h3>
           <div class="audio-wrapper">
-            <span class="material-symbols-outlined" id="volume-on">
+            <span class="material-symbols-outlined" id="volume-toggle">
               volume_up
-            </span>
-            <span class="material-symbols-outlined" id="volume-off">
-              volume_off
             </span>
           </div>
         </div>
       </div>
     </div>
-    <div id="overlay-game-end">
+    <div class="overlay" id="overlay-game-end">
       <div class="overlay-content">
         <div id="overlay-content-game-end">
           <h1 id="overlay-h1"></h1>
@@ -116,6 +114,6 @@
     </div>
     <audio loop id="background-audio" src="./sounds/background_music.mp3"></audio>
     <audio id="crash-sound"></audio>
-    <audio loop id="background-sounds"></audio>
+    <audio loop id="background-sound-audio"></audio>
   </body>
 </html>
