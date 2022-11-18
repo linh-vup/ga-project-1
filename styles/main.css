@@ -35,6 +35,8 @@ a {
   margin-right: 20px;
 }
 
+.resource-link
+
 .grid-wrapper {
   height: 75vh;
   display: flex;
@@ -85,16 +87,16 @@ a {
   background-size: contain;
 }
 .grid #lane-1 {
-  background-image: url(../Images/log.png), url(../Images/gras_water_2.png);
+  background-image: url(../Images/boat_pixel.gif), url(../Images/gras_water_2.png);
   background-size: contain;
 }
 .grid #lane-2 {
-  background-image: url(../Images/log.png), url(../Images/water.png);
+  background-image: url(../Images/log_pixel.png), url(../Images/water.png);
   background-size: contain;
 }
 
 .grid #lane-3 {
-  background-image: url(../Images/lilypad2.png), url(../Images/water.png);
+  background-image: url(../Images/lilypad_pixel.png), url(../Images/water.png);
   background-size: contain;
   background-position: bottom;
 }
@@ -187,7 +189,7 @@ a {
 }
 
 .grid .cell.goal.playerInGoal {
-  background-image: url(../Images/sleepingfox.gif), url(../Images/nest.png);
+  background-image: url(../Images/sleeping_fox_pixel.gif), url(../Images/nest.png);
   background-repeat: no-repeat;
   background-size: contain;
 }

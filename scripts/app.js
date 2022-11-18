@@ -9,6 +9,9 @@ function init() {
   const closeSettingsIcon = document.querySelector("#close-icon");
   const difficultyForm = document.querySelector("#form-difficulty");
   const radioButtonDefault = document.querySelector("#easy");
+  const gameStartOverlay = document.querySelector("#overlay-game-start");
+  const settingsOverlay = document.querySelector("#overlay-settings");
+  const gameEndOverlay = document.querySelector("#overlay-game-end");
   const overlayHeaderOneText = document.querySelector("#overlay-h1");
   const overlayHeaderThreeText = document.querySelector("#overlay-h3");
   const backgroundMusicAudioElement =
@@ -425,11 +428,11 @@ function init() {
   }
 
   function showSettingsOverlay() {
-    document.querySelector("#overlay-settings").style.display = "flex";
+    settingsOverlay.style.display = "flex";
   }
 
   function showGameEndOverlay() {
-    document.querySelector("#overlay-game-end").style.display = "flex";
+    gameEndOverlay.style.display = "flex";
     if (gameState.state === "won" && gameState.difficulty === "difficult") {
       overlayHeaderOneText.innerHTML = "Easter Egg unlocked!";
       overlayHeaderThreeText.innerHTML =
@@ -445,9 +448,9 @@ function init() {
   }
 
   function hideAllOverlays() {
-    document.querySelector("#overlay-game-start").style.display = "none";
-    document.querySelector("#overlay-game-end").style.display = "none";
-    document.querySelector("#overlay-settings").style.display = "none";
+    gameStartOverlay.style.display = "none";
+    gameEndOverlay.style.display = "none";
+    settingsOverlay.style.display = "none";
   }
 
   function clearTimers() {
